@@ -43,6 +43,17 @@ func TestValidateDuplicateInputs(t *testing.T) {
 	}
 }
 
+func TestProvisionRejectMalformedDestinations(t *testing.T) {
+	for _, dest := range []string{"{result", "{result}}", "{result}suffix"} {
+		t.Run(dest, func(t *testing.T) {
+			h := Handler{Destinations: []string{dest}}
+			if err := h.Provision(caddy.Context{}); err == nil {
+				t.Fatalf("expected malformed destination %q to be rejected", dest)
+			}
+		})
+	}
+}
+
 func TestHandler(t *testing.T) {
 	for i, tc := range []struct {
 		handler Handler

@@ -64,7 +64,7 @@ func (Handler) CaddyModule() caddy.ModuleInfo {
 // Provision sets up h.
 func (h *Handler) Provision(_ caddy.Context) error {
 	for j, dest := range h.Destinations {
-		if strings.Count(dest, "{") != 1 || !strings.HasPrefix(dest, "{") {
+		if strings.Count(dest, "{") != 1 || strings.Count(dest, "}") != 1 || !strings.HasPrefix(dest, "{") || !strings.HasSuffix(dest, "}") {
 			return fmt.Errorf("destination must be a placeholder and only a placeholder")
 		}
 		h.Destinations[j] = strings.Trim(dest, "{}")
